@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 # LLM APIs you have set up
 llm_apis = {
     "llama2:7b": {
-        "endpoint": "https://c8d1-87-254-1-141.ngrok.io/receive_question/",
+        "endpoint": "https://7a93-87-254-1-141.ngrok.io/receive_question/",
         "context": "Specialty description of this LLM"
     },
     # ... other LLMs
