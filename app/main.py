@@ -13,14 +13,12 @@ class LLMRequestData(BaseModel):
 # Endpoint to receive requests from Chainlink
 @app.post("/mozart")
 async def mozart_endpoint(data: LLMRequestData):
-    # Resolve which LLM to use based on the query and context
-    # Note: Since llm_resolver is synchronous, you might want to make it async if it performs I/O
-    llm_id = llm_resolver(data.query, data.context)
-
-    # Call the resolved LLM and get the response
-    response_data = await call_llm(data.query, data.context, llm_id)
-
-    # Return the response data back to the caller
-    return response_data
+    try:
+        # Ensure you're awaiting llm_resolver and getting the endpoint
+        llm_endpoint = await llm_resolver(data.query, data.context)
+        response_data = await call_llm(data.query, data.context, llm_endpoint)
+        return response_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
