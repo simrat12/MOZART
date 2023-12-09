@@ -5,19 +5,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import asyncio
 import logging
+from .llm_config import llm_apis
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# LLM APIs you have set up
-llm_apis = {
-    "llama2:7b": {
-        "endpoint": "http://aichain.ddns.net:8080/receive_question/",
-        "context": "Maths"
-    },
-    # ... other LLMs
-}
 
 def calculate_cosine_similarity(contexts: List[str], query_context: str) -> np.ndarray:
     """

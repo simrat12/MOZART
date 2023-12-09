@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 from .llm_resolver import llm_resolver, call_llm, get_llm_status
+from .llm_config import llm_apis
 
 app = FastAPI()
 
@@ -9,6 +10,23 @@ app = FastAPI()
 class LLMRequestData(BaseModel):
     query: str
     context: Optional[str] = None
+
+class LLMAPIData(BaseModel):
+    id: str
+    endpoint: str
+    context: str
+
+@app.post("/register_llm_api")
+async def register_llm_api(data: LLMAPIData):
+    if data.id in llm_apis:
+        raise HTTPException(status_code=400, detail="LLM API with this ID already exists")
+    
+    llm_apis[data.id] = {
+        "endpoint": data.endpoint,
+        "context": data.context
+    }
+
+    return {"message": "LLM API registered successfully"}
 
 # Endpoint to receive requests from Chainlink
 @app.post("/mozart")
