@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 # LLM APIs you have set up
 llm_apis = {
     "llama2:7b": {
-        "endpoint": "https://c2d7-193-160-246-226.ngrok.io/receive_question/",
-        "context": "Specialty description of this LLM"
+        "endpoint": "http://aichain.ddns.net:8080/receive_question/",
+        "context": "Maths"
     },
     # ... other LLMs
 }
@@ -40,7 +40,7 @@ async def get_llm_status(llm_id: str) -> bool:
         logger.error(f"Error checking LLM status for {llm_id}: {e}")
         return False
 
-async def llm_resolver(query: str, query_context: str) -> str:
+async def llm_resolver(query: str) -> str:
     """
     Select an LLM based on the cosine similarity between the context of the query and the LLM's specialty.
     """
@@ -48,7 +48,7 @@ async def llm_resolver(query: str, query_context: str) -> str:
 
     loop = asyncio.get_event_loop()
     cosine_similarities = await loop.run_in_executor(
-        None, calculate_cosine_similarity, llm_contexts, query_context
+        None, calculate_cosine_similarity, llm_contexts, query
     )
 
     most_similar_llm_index = np.argmax(cosine_similarities)
