@@ -50,18 +50,18 @@ async def llm_resolver(query: str) -> str:
     logger.info(f"Selected LLM {most_similar_llm_id} for query: {query}")
     return most_similar_llm_id
 
-async def call_llm(query: str, context: Optional[str], llm_id: str) -> Dict:
+async def call_llm(query: str, llm_id: str) -> Dict:
     """
     Call the chosen LLM API and return the response.
     """
-    logger.info(f"Attempting to call LLM {llm_id} with query: '{query}' and context: '{context}'")
+    logger.info(f"Attempting to call LLM {llm_id} with query: '{query}'")
 
     llm_endpoint = llm_apis[llm_id]['endpoint']
     logger.info(f"llm endpoint: {llm_endpoint}")
 
     try:
         async with httpx.AsyncClient() as client:
-            post_data = {"question": query, "context": context}
+            post_data = {"question": query}
             logger.info(f"Sending POST request to {llm_endpoint} with data: {post_data}")
             response = await client.post(llm_endpoint, json=post_data)
             response.raise_for_status()

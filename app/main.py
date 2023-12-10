@@ -9,7 +9,6 @@ app = FastAPI()
 # Pydantic model for receiving requests from Chainlink or other clients
 class LLMRequestData(BaseModel):
     query: str
-    context: Optional[str] = None
 
 class LLMAPIData(BaseModel):
     id: str
@@ -33,8 +32,8 @@ async def register_llm_api(data: LLMAPIData):
 async def mozart_endpoint(data: LLMRequestData):
     try:
         # Ensure you're awaiting llm_resolver and getting the endpoint
-        llm_endpoint = await llm_resolver(data.query, data.context)
-        response_data = await call_llm(data.query, data.context, llm_endpoint)
+        llm_endpoint = await llm_resolver(data.query)
+        response_data = await call_llm(data.query, llm_endpoint)
         return response_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
